@@ -14,8 +14,20 @@ function bubble(&$arr)
     }
 }
 
-$a = [4, 3, 5, 8, 1, 6];
-
+// result
+$a = [3, 1, 4, 5, 7, 2, 8];
 bubble($a);
+print_r($a);
 
-var_dump($a);
+// time
+$numArr = [];
+for($i=0;$i<50000;$i++){
+    $numArr[] = $i;    
+}
+shuffle($numArr);
+
+$t1 = microtime(true);
+bubble($numArr);
+$t2 = microtime(true);
+
+echo '耗时'.round($t2 - $t1, 3).'秒';
