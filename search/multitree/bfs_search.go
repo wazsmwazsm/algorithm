@@ -74,7 +74,4 @@ func main() {
 	nodeJSON, _ := json.Marshal(node)
 	fmt.Printf("%s\n", nodeJSON)
 
-	// path := t.GetPathBetweenNode(1, 3)
-	// pathJSON, _ := json.Marshal(path)
-	// fmt.Printf("%s\n", pathJSON)
 }
