@@ -1,0 +1,56 @@
+package main
+
+// 后序遍历常常用来处理一些从低向上的遍历, 后序遍历中遍历到当前节点时, 当前节点的
+// 左右子树已经遍历过了
+
+func postOrderRecur(root *Node) {
+	if root == nil {
+		return
+	}
+
+	postOrderRecur(root.Left)
+	postOrderRecur(root.Right)
+	root.Show()
+}
+
+// 非递归要抓住 左右中 的特性来入出栈
+// 中节点要获取, 来判断是否有右节点或右节点已经访问过, 但是不要将它出栈
+// 判断右节点是否被访问过, 需要一个指针指向它
+func postOrder(root *Node) {
+	if root == nil {
+		return
+	}
+
+	stack := []*Node{}
+	curr := root
+	var prev *Node
+
+	for curr != nil || len(stack) != 0 {
+		// 和中序一样, 先走到最左
+		for curr != nil {
+			stack = append(stack, curr)
+			curr = curr.Left
+		}
+
+		curr = stack[len(stack)-1] // 只取值不出栈
+
+		// 当前节点的右节点不存在或者已经遍历过了, ok 可以出栈完成本节点的遍历了
+		if curr.Right == nil || curr.Right == prev {
+			// 出栈
+			curr = stack[len(stack)-1]
+			stack = stack[:len(stack)-1]
+
+			// 在后序遍历如果是有需要记录左右子树的结果的, 可以用一个数组来保存遍历数据
+			// 左右中的顺序, 那么到当前节点 a[n] 退栈, 左节点和右节点的值分别为 a[n-2] 和 a[n-1]
+			curr.Show()
+
+			prev = curr // 记下来。按照 左右中 的顺序, 中的上一个出栈节点就是它的右孩子
+			curr = nil  // 退栈后没有新的左节点要添加, 需要回到父节点继续执行遍历
+
+		} else { // 右节点还没遍历, 先去遍历右节点
+			curr = curr.Right
+		}
+
+	}
+
+}
