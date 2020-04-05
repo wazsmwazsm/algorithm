@@ -59,6 +59,7 @@ func postOrder(root *Node) {
 }
 
 // 双栈法, 构造一个 中右左 的遍历, 反过来就是
+// 本质还是前序遍历, 这种方法无法获取子树的结果
 func postOrderTwoStack(root *Node) {
 	if root == nil {
 		return
