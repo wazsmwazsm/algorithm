@@ -2,6 +2,9 @@ package main
 
 // 后序遍历常常用来处理一些从低向上的遍历, 后序遍历中遍历到当前节点时, 当前节点的
 // 左右子树已经遍历过了
+import (
+	"fmt"
+)
 
 func postOrderRecur(root *Node) {
 	if root == nil {
@@ -53,4 +56,62 @@ func postOrder(root *Node) {
 
 	}
 
+}
+
+// 双栈法, 构造一个 中右左 的遍历, 反过来就是
+func postOrderTwoStack(root *Node) {
+	if root == nil {
+		return
+	}
+
+	stack := []*Node{root}
+	reverseStack := []*Node{}
+
+	for len(stack) != 0 {
+		curr := stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+
+		reverseStack = append(reverseStack, curr) // 第二个栈入栈
+
+		if curr.Left != nil { // 和前序的不同是左节点先入栈
+			stack = append(stack, curr.Left)
+		}
+		if curr.Right != nil {
+			stack = append(stack, curr.Right)
+		}
+	}
+
+	for len(reverseStack) != 0 { // 将反栈输出
+		curr := reverseStack[len(reverseStack)-1]
+		reverseStack = reverseStack[:len(reverseStack)-1]
+
+		curr.Show()
+	}
+}
+
+// Deque 来简化双栈法, 需要结果集保存值, 把结果从头部开始插入即可
+func postOrderDeque(root *Node) {
+	if root == nil {
+		return
+	}
+
+	result := []int{}
+
+	stack := []*Node{root}
+
+	for len(stack) != 0 {
+		curr := stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+
+		result = append([]int{curr.Val}, result...) // 结果集
+
+		if curr.Left != nil { // 和前序的不同是左节点先入栈
+			stack = append(stack, curr.Left)
+		}
+		if curr.Right != nil {
+			stack = append(stack, curr.Right)
+		}
+	}
+
+	fmt.Println(result)
 }
