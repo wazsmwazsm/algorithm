@@ -43,8 +43,6 @@ func postOrder(root *Node) {
 			curr = stack[len(stack)-1]
 			stack = stack[:len(stack)-1]
 
-			// 在后序遍历如果是有需要记录左右子树的结果的, 可以用一个数组来保存遍历数据
-			// 左右中的顺序, 那么到当前节点 a[n] 退栈, 左节点和右节点的值分别为 a[n-2] 和 a[n-1]
 			curr.Show()
 
 			prev = curr // 记下来。按照 左右中 的顺序, 中的上一个出栈节点就是它的右孩子

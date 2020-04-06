@@ -33,7 +33,6 @@ func inOrder(root *Node) {
 		curr = stack[len(stack)-1]
 		stack = stack[:len(stack)-1]
 
-		// 需要取左节点值, 可以用数组记录遍历结果. 左中右的顺序, 当前节点 a[n], 左节点为 a[n-1]
 		curr.Show()
 
 		// 现在 curr 的左子树都已遍历, curr 自己也遍历, 指针移到右子树执行相同工作
