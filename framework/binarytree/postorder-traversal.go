@@ -43,7 +43,7 @@ func postOrder(root *Node) {
 			curr = stack[len(stack)-1]
 			stack = stack[:len(stack)-1]
 
-			curr.Show()
+			curr.Show() // 可用 map 来保存所有节点的计算结果, 这样 curr 就可以方便获取子节点的结果
 
 			prev = curr // 记下来。按照 左右中 的顺序, 中的上一个出栈节点就是它的右孩子
 			curr = nil  // 退栈后没有新的左节点要添加, 需要回到父节点继续执行遍历
