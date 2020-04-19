@@ -12,15 +12,17 @@ func main() {
 	res = [][]int{}
 	nums := []int{1, 2, 3}
 
-	track := []int{}
-	backTrack2(track, nums)
+	// track := []int{}
+	// backTrack(track, nums)
+	backTrack2(nums)
 
 	fmt.Println(res)
 	return
 }
 
 // 回溯, 决策树遍历
-// 时间复杂度 O(n!) (不算 contains 函数)
+// 时间复杂度, 解空间树的节点数, 排列是 n! (A(n,n)), contains 为 O(n), 则 O(n*n!)
+// 空间, track 为 O(n), 有 n! 组解, O(n*n!), 递归的占用是 O(logn) 忽略
 func backTrack(track, nums []int) {
 	if len(track) == len(nums) { // 回溯结束条件
 		tmp := make([]int, len(track))
@@ -52,13 +54,16 @@ func contains(num int, nums []int) bool {
 
 // 使用栈非递归回溯
 // track 存索引
-func backTrack2(track, nums []int) {
+// 时间复杂度, 解空间树的节点数, 排列是 n!, contains 为 O(n), 则 O(n*n!)
+// 空间, track 为 O(n), 有 n! 组解, O(n*n!)
+func backTrack2(nums []int) {
 
 	n := len(nums)
 	k := 0 // 回溯层
 	// 解空间
-	for i := 0; i < len(nums); i++ {
-		track = append(track, -1)
+	track := make([]int, n)
+	for i := 0; i < n; i++ {
+		track[i] = -1
 	}
 	for k >= 0 {
 		track[k] = track[k] + 1                             // 找下一个可用元素
