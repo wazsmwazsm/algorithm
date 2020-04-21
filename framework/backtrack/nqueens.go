@@ -40,7 +40,8 @@ func showBoard(board [][]string) {
 // 路径就是放了皇后的棋盘(二维数组)
 // 选择列表是可放皇后的位置(在循环中计算其是否合法)
 // 回溯出口是所有行都放完
-// 时间复杂度最坏 O(n!) (不计算 isValid 的复杂度) isValid 有给决策树剪枝
+// 时间, isValid 是 O(n), 排列问题 n! 个解(解空间树 n! 个节点), 每次遍历会迭代列选择, 综和为 O(n^2*n!)
+// 空间, n! 个解, 每个解要 n^2 个空间(二维棋盘) 综合 O(n^2*n!)
 func backtrack(board [][]string, row int) {
 	if len(board) == row { // 回溯结束条件
 		showBoard(board) // 打印结果

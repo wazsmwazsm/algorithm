@@ -14,9 +14,9 @@ func main() {
 	sort.Ints(nums)
 	// track := []int{}
 	// combineSum(nums, track, 10, 0, 0, &res)
-	// combineSumCanRepeat(nums, track, 10, 0, 0, &res)
+	// combineSumCanRepeat(nums, track, 18, 0, 0, &res)
 	// combineSum2(nums, 10, &res)
-	combineSumCanRepeat2(nums, 10, &res)
+	combineSumCanRepeat2(nums, 18, &res)
 	fmt.Println(res)
 
 	return
@@ -91,6 +91,7 @@ func combineSum2(nums []int, sum int, res *[][]int) {
 }
 
 // 如果元素可重复使用
+// 可以重复的话, 复杂度会高于不重复使用元素, 具体复杂度还要看剪枝条件
 func combineSumCanRepeat(nums []int, track []int, sum, target, start int, res *[][]int) {
 	if target == sum { // 满足和
 		tmp := make([]int, len(track))
@@ -103,7 +104,7 @@ func combineSumCanRepeat(nums []int, track []int, sum, target, start int, res *[
 		if i > 0 && nums[i] == nums[i-1] { // 因为元素自身可重复, 所以忽略相同元素就不用管是不是大于两个元素值相同
 			continue
 		}
-		track = append(track, nums[i])
+		track = append(track, nums[i]) // 这里一直使用 append, 不会出现非递归时越界问题
 		// 很简单, 下一轮的 start 给 i (算上自己) 而不是 i+1
 		combineSumCanRepeat(nums, track, sum, target+nums[i], i, res)
 		track = track[:len(track)-1]
@@ -111,10 +112,9 @@ func combineSumCanRepeat(nums []int, track []int, sum, target, start int, res *[
 }
 
 // 元素可重复使用的情况, 非递归
-// 时间、空间同上
 func combineSumCanRepeat2(nums []int, sum int, res *[][]int) {
 	n := len(nums)
-	track := make([]int, n)
+	track := make([]int, n) // 先分配这么多
 	for i := 0; i < n; i++ {
 		track[i] = -1
 	}
@@ -129,8 +129,6 @@ func combineSumCanRepeat2(nums []int, sum int, res *[][]int) {
 			track[k]++
 		}
 		if track[k] > n-1 { // 没找到则回溯
-
-			track[k] = -1
 			k--
 			if k > 0 {
 				target -= nums[track[k]]
@@ -147,7 +145,11 @@ func combineSumCanRepeat2(nums []int, sum int, res *[][]int) {
 		} else { // 下一个元素
 			target += nums[track[k]]
 			k++
-			track[k] = track[k-1] - 1 // 忽略已选元素, 自己可重选
+			if k >= len(track) { // 注意一点, 因为元素可重复, k 的大小不定, 这里需要能扩容
+				track = append(track, track[k-1]-1)
+			} else {
+				track[k] = track[k-1] - 1 // 忽略已选元素, 自己可重选
+			}
 		}
 	}
 }
