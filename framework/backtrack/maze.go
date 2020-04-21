@@ -199,5 +199,6 @@ func main() {
 	}, 0, 1, 7, 6)
 	fmt.Println("map:")
 	m.ShowMap()
+	// m.FindPath()
 	m.FindPath2()
 }
