@@ -161,8 +161,8 @@ func (m *Maze) FindPath2() {
 	}
 
 	for k >= 0 {
+		comeBack(track[k])                    // 如果能回退(初次选择不会回退, track[k] 是 -1), 则回退上一步 x,y 坐标
 		track[k]++                            // 选择当前操作
-		comeBack(track[k] - 1)                // 如果能回退, 则回退上一步 x,y 坐标
 		for track[k] < n && !move(track[k]) { // 进行剪枝操作
 			track[k]++
 		}
