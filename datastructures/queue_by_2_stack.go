@@ -13,10 +13,10 @@ func NewTwoStackQueue() *TwoStackQueue {
 	}
 }
 
-func (q *TwoStackQueue) Push(x int) {
+func (q *TwoStackQueue) Offer(x int) {
 	q.stack1.Push(x)
 }
-func (q *TwoStackQueue) Pop() int {
+func (q *TwoStackQueue) Pull() int {
 	head := q.Peek()
 	q.stack2.Pop() // 弹出
 	return head

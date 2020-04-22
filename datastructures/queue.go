@@ -1,8 +1,8 @@
 package datastructures
 
 type Queue interface {
-	Push(x int)
-	Pop() int
+	Offer(x int)
+	Pull() int
 	Peek() int
 	Empty() bool
 }

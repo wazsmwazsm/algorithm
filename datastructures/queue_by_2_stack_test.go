@@ -11,8 +11,8 @@ func TestTwoStackQueue(t *testing.T) {
 		t.Error("queue not empty")
 	}
 
-	q.Push(2)
-	q.Push(7)
+	q.Offer(2)
+	q.Offer(7)
 	if q.Empty() {
 		t.Error("queue is empty")
 	}
@@ -21,9 +21,9 @@ func TestTwoStackQueue(t *testing.T) {
 		t.Error("queue peek get err")
 	}
 	if !q.Empty() {
-		q.Pop()
-		if q.Pop() != 7 {
-			t.Error("queue pop get err")
+		q.Pull()
+		if q.Pull() != 7 {
+			t.Error("queue pull get err")
 		}
 	}
 }
