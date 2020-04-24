@@ -11,7 +11,7 @@ import (
 // 删除堆顶每次 sink O(log(n)), n 个元素循环 n 次, 为 O(nlog(n)), 最终时间复杂度为 O(nlog(n))
 // 空间 O(n)
 func HeapSort(a []int) {
-	mh := datastructures.NewMinHead(a...)
+	mh := datastructures.NewMinHeap(a...)
 	res := []int{} // 保存堆顶(不要直接改 a, 会导致堆的底层数据变化)
 	for i := 0; i < len(a); i++ {
 		res = append(res, mh.DeleteMin())
@@ -24,7 +24,7 @@ func HeapSort(a []int) {
 // 时间 O(nlog(n)) 空间 O(1)
 // 同样倒序可以用最小堆来解决
 func HeapSort2(a []int) {
-	mh := datastructures.NewMaxHead(a...)
+	mh := datastructures.NewMaxHeap(a...)
 	for i := len(a) - 1; i >= 0; i-- {
 		a[i] = mh.DeleteMax()
 	}
