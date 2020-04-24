@@ -1,17 +1,36 @@
+// 最小堆实现
+
 package datastructures
 
-type MinHead []int
+type MinHeap []int
 
-func NewMinHead() MinHead {
-	return MinHead([]int{})
+func NewMinHeap(a ...int) MinHeap {
+	if len(a) == 0 {
+		return MinHeap([]int{})
+	}
+
+	mh := MinHeap(a)
+	// 将非叶子节点依次下沉 (根据完全二叉树的特点, n 个节点的完全二叉树非叶子节点从 0 到 n/2)
+	for i := len(mh) / 2; i >= 0; i-- {
+		mh.sink(i)
+	}
+	return mh
 }
-func (h *MinHead) Insert(value int) {
+
+func (h *MinHeap) Top() int {
+	if len(*h) == 0 {
+		return 0
+	}
+	return (*h)[0]
+}
+
+func (h *MinHeap) Insert(value int) {
 	*h = append(*h, value) // 插入元素到堆尾
 
 	h.swin(len(*h) - 1) // 最后一个元素上浮
 }
 
-func (h *MinHead) DeleteMin() int {
+func (h *MinHeap) DeleteMin() int {
 	if len(*h) == 0 {
 		return 0
 	}
@@ -25,18 +44,18 @@ func (h *MinHead) DeleteMin() int {
 	return max
 }
 
-func (h *MinHead) parent(root int) int {
+func (h *MinHeap) parent(root int) int {
 	return (root - 1) / 2
 }
 
-func (h *MinHead) left(root int) int {
+func (h *MinHeap) left(root int) int {
 	return 2*root + 1
 }
-func (h *MinHead) right(root int) int {
+func (h *MinHeap) right(root int) int {
 	return 2*root + 2
 }
 
-func (h *MinHead) swin(index int) {
+func (h *MinHeap) swin(index int) {
 
 	value := (*h)[index]                             // 保存元素值
 	for index > 0 && value < (*h)[h.parent(index)] { // 未达堆顶或满足交换条件, 进行交换
@@ -46,7 +65,7 @@ func (h *MinHead) swin(index int) {
 	(*h)[index] = value // 把 value 放置到合适的位置
 }
 
-func (h *MinHead) sink(index int) {
+func (h *MinHeap) sink(index int) {
 	if len(*h) <= 0 {
 		return
 	}
