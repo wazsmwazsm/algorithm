@@ -4,7 +4,7 @@ import (
 // "fmt"
 )
 
-// BubbleSort 冒泡排序
+// BubbleSort 冒泡排序 O(n^2) 空间 O(1) 稳定
 func BubbleSort(a []int) {
 	for i := 0; i < len(a)-1; i++ { // n 个数, 需要 n - 1 轮交换
 		for j := 0; j < len(a)-1-i; j++ { // 每轮结束后, 后面的有序区就多 1, 下一轮少遍历 1

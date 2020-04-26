@@ -1,6 +1,6 @@
 package sort
 
-// SelectSort 选择排序 O(n^2) 不稳定
+// SelectSort 选择排序 O(n^2) 空间 O(1) 不稳定
 func SelectSort(a []int) {
 	for i := 0; i < len(a)-1; i++ {
 		minIndex := i
