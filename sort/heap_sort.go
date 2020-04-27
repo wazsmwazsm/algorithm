@@ -29,3 +29,43 @@ func HeapSort2(a []int) {
 		a[i] = mh.DeleteMax()
 	}
 }
+
+// HeapSort3 从 go sort 包源码中改编过来的
+// 不显示的构造最大堆的方式, 直接利用原数组交换进行原地排序
+func HeapSort3(a []int) {
+	lo := 0 // lo 做堆顶
+	hi := len(a)
+
+	// 生成大顶堆 (非叶子节点依次下沉)
+	for i := (hi - 1) / 2; i >= 0; i-- {
+		siftDown(a, i, hi)
+	}
+	// 依次 pop 堆顶元素补到数组后面
+	for i := hi - 1; i >= 0; i-- {
+		a[i], a[lo] = a[lo], a[i] // 删掉堆顶, 最后一个元素补到堆顶
+		siftDown(a, lo, i)        // 堆少了 i 个元素. 重新下沉补到堆顶的 a[lo] 元素
+	}
+}
+
+// 对 data[lo, hi) 区间内维护大顶堆特性, 下沉 lo. lo 是堆顶
+func siftDown(a []int, lo, hi int) {
+	root := lo
+	for {
+		child := 2*root + 1 // 左节点
+		if child >= hi {    // 超过范围
+			return
+		}
+
+		if child+1 < hi && a[child] < a[child+1] { // 如果右节点存在且大于左节点
+			child++ // 切换到右节点
+		}
+
+		if a[root] > a[child] { // 堆顶已经大于最大的子, 无需继续下沉
+			return
+		}
+		// 交换
+		a[root], a[child] = a[child], a[root]
+		// 向下
+		root = child
+	}
+}
