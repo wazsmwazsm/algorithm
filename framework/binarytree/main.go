@@ -15,6 +15,16 @@ import (
 func main() {
 	fmt.Println("BFS:")
 	bfs(gTree) // 1 2 3 4 5 6
+	fmt.Println("BFS2:")
+
+	/*
+		演示 bfs 的单独操作层的方法
+
+		第 1 层:  1
+		第 2 层:  2  3
+		第 3 层:  4  5  6
+	*/
+	bfs2(gTree)
 
 	fmt.Println("pre Order Recur:")
 	preOrderRecur(gTree) // 1 2 4 5 3 6
