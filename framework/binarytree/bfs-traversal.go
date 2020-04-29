@@ -43,7 +43,7 @@ func bfs2(root *Node) {
 			curr := queue[0]
 			queue = queue[1:]
 			fmt.Printf(" %v ", curr.Val)
-			if curr.Left != nil {
+			if curr.Left != nil { // 这里可以不判断，出队时再判断，此时 i 就代表了本层的第几个位置
 				queue = append(queue, curr.Left)
 			}
 			if curr.Right != nil {
