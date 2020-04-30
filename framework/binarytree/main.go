@@ -30,6 +30,8 @@ func main() {
 	preOrderRecur(gTree) // 1 2 4 5 3 6
 	fmt.Println("in Order Recur:")
 	inOrderRecur(gTree) // 4 2 5 1 3 6
+	fmt.Println("in Order reverse Recur:")
+	inOrderReverseRecur(gTree) // 6 3 1 5 2 4
 	fmt.Println("post Order Recur:")
 	postOrderRecur(gTree) // 4 5 2 6 3 1
 
@@ -37,6 +39,8 @@ func main() {
 	preOrder(gTree) // 1 2 4 5 3 6
 	fmt.Println("in Order:")
 	inOrder(gTree) // 4 2 5 1 3 6
+	fmt.Println("in Order reverse:")
+	inOrderReverse(gTree) // 6 3 1 5 2 4
 	fmt.Println("post Order:")
 	postOrder(gTree) // 4 5 2 6 3 1
 	fmt.Println("post Order two stack:")
