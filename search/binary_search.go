@@ -22,7 +22,8 @@ func search(a []int, v int) bool {
 	left, right, mid := 0, length-1, 0
 
 	for left <= right {
-		mid = (left + right) / 2
+		// mid = (left + right) / 2
+		mid = left + (right-left)/2 // 防止除 0 的写法
 		if a[mid] == v {
 			return true
 		}
