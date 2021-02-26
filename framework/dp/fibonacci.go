@@ -11,7 +11,7 @@ package dp
 // 解法 1，建立 dp table，保存子问题，从小推到大
 // 时间 O(n) 空间 O(n) (dp 数组的创建)
 func fibonacci(n int) int {
-	dp := make([]int, n+1) // 创建 dp table, n 从 1 开始
+	dp := make([]int, n+2) // 创建 dp table, n 从 1 开始
 
 	dp[1], dp[2] = 1, 1 // n <=2 索引 0 废弃不用
 
