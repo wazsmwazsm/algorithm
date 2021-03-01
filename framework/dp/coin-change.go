@@ -49,7 +49,7 @@ func coinChange2(coins []int, amount int) int {
 
 	// 构建 dp 数组， 保存子问题结果
 	// dp 数组的定义：当目标金额为 i 时，至少需要 dp[i] 枚硬币凑出
-	dpArr := make([]int, amount+1) // amount+1 个问题（包含 0 这个子问题）
+	dpArr := make([]int, amount+1) // amount+1 个问题（包含 0 这个子问题, 金额从 0 到 amount, 所以 amount + 1）
 	for k := range dpArr {
 		dpArr[k] = intMax
 	}
