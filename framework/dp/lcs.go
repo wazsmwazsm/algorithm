@@ -24,6 +24,8 @@ package dp
 			那么都不在肯定不是最长，那么自然取 s1[i] 不在 和 s2[j] 不在这两种情形的子问题结果的最大值即可
 
 */
+// 时间复杂度 O(kn)(使用备忘录给递归树减枝后，重复计算的子问题冗余消失
+//子问题数目为 O(n)。处理一个子问题的时间不变，仍是 O(k)，所以总的时间复杂度是 O(kn))、空间复杂度 O(kn)(递归的 O(logn) 忽略)
 func lxsDp(memo *[][]int, s1 string, i int, s2 string, j int) int {
 	if i == len(s1) || j == len(s2) { // base case
 		return 0
@@ -65,4 +67,80 @@ func longestCommonSubsequence(s1, s2 string) int {
 	}
 
 	return lxsDp(&memo, s1, 0, s2, 0)
+}
+
+// 定义 dp 数组，自低向上
+// 时间复杂度、空间复杂度 O(kn)
+func longestCommonSubsequence2(s1, s2 string) int {
+
+	lS1 := len(s1)
+	lS2 := len(s2)
+	// 初始化 dp 数组 (因为要存 base case 子问题的解, 所以都 + 1)
+	// 第一个值存 base case 即 dpArr[0][...] = 0 dpArr[...][0] = 0
+	dpArr := [][]int{}
+	for i := 0; i <= lS1; i++ {
+		arr := []int{}
+		for j := 0; j <= lS2; j++ {
+			arr = append(arr, 0)
+		}
+		dpArr = append(dpArr, arr)
+	}
+
+	// i 和 j 为 0 为 base case
+	for i := 1; i <= lS1; i++ {
+		for j := 1; j <= lS2; j++ {
+			if s1[i-1] == s2[j-1] { // 现在 i 和 j 从 1 开始，所以要减一（从 base case 开始推导，自底向上）
+				dpArr[i][j] = 1 + dpArr[i-1][j-1]
+			} else {
+				subRes1 := dpArr[i-1][j]
+				subRes2 := dpArr[i][j-1]
+
+				if subRes1 > subRes2 {
+					dpArr[i][j] = subRes1
+				} else {
+					dpArr[i][j] = subRes2
+				}
+			}
+		}
+	}
+
+	return dpArr[lS1][lS2]
+}
+
+// 定义 dp 数组，自低向上（和 2 一样，只不过推到 dp 时 i j 从 0 开始, 当前值推导下一个值）
+// 时间复杂度、空间复杂度 O(kn)
+func longestCommonSubsequence3(s1, s2 string) int {
+
+	lS1 := len(s1)
+	lS2 := len(s2)
+	// 初始化 dp 数组 (因为要存 base case 子问题的解, 所以都 + 1)
+	// base case 即 dpArr[0][j] = 0 和 dpArr[i][0] = 0
+	dpArr := [][]int{}
+	for i := 0; i <= lS1; i++ {
+		arr := []int{}
+		for j := 0; j <= lS2; j++ {
+			arr = append(arr, 0)
+		}
+		dpArr = append(dpArr, arr)
+	}
+
+	// i 和 j 为 0 为 base case
+	for i := 0; i < lS1; i++ {
+		for j := 0; j < lS2; j++ {
+			if s1[i] == s2[j] {
+				dpArr[i+1][j+1] = 1 + dpArr[i][j]
+			} else {
+				subRes1 := dpArr[i][j+1]
+				subRes2 := dpArr[i+1][j]
+
+				if subRes1 > subRes2 {
+					dpArr[i+1][j+1] = subRes1
+				} else {
+					dpArr[i+1][j+1] = subRes2
+				}
+			}
+		}
+	}
+
+	return dpArr[lS1][lS2]
 }
