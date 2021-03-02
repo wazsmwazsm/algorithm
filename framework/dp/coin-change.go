@@ -48,6 +48,52 @@ func coinChange(coins []int, amount int) int {
 	return dp(coins, amount)
 }
 
+// 使用备忘录，时间复杂度 O(kn)(使用备忘录给递归树减枝后，重复计算的子问题冗余消失
+// 子问题数目为 O(n)。处理一个子问题的时间不变，仍是 O(k)，所以总的时间复杂度是 O(kn))、空间复杂度 O(kn)(递归的 O(logn) 忽略)
+func dpMemo(memo *map[int]int, coins []int, n int) int {
+
+	// 1. 确定 base case
+	if n == 0 { // 金额为 0
+		return 0
+	}
+
+	if n < 0 { // 无解
+		return -1
+	}
+
+	if v, ok :=(*memo)[n]; ok {
+		return v
+	}
+
+	res := intMax
+	// 做选择，选择不同面值和子问题结果的组合中使用数量最少的
+	for _, coin := range coins {
+		subproblem := dpMemo(memo, coins, n-coin) // 子问题的解
+
+		if subproblem == -1 { // 子问题无解，忽略
+			continue
+		}
+		// 子问题的解 + 当前面值的硬币一个
+		if res > subproblem+1 { // 选择最小的解
+			res = subproblem + 1
+		}
+	}
+	if res == intMax { // 无解
+		(*memo)[n] = -1
+	}
+
+	(*memo)[n] = res
+
+	return (*memo)[n]
+}
+// 使用备忘录
+func coinChange2(coins []int, amount int) int {
+
+	memo := make(map[int]int)
+
+	return dpMemo(&memo, coins, amount)
+}
+
 // dp 数组解
 func coinChange3(coins []int, amount int) int {
 
