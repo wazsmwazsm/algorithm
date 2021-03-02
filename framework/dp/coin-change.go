@@ -8,7 +8,7 @@ const intMax = int(^uint(0) >> 1)
 // 寻找最优子结构
 
 // dp 函数解（自顶向下方式）
-func dp(coins []int, n int) int {
+func dp(coins *[]int, n int) int {
 
 	// 1. 确定 base case
 	if n == 0 { // 金额为 0
@@ -21,7 +21,7 @@ func dp(coins []int, n int) int {
 
 	res := intMax
 	// 做选择，选择不同面值和子问题结果的组合中使用数量最少的
-	for _, coin := range coins {
+	for _, coin := range *coins {
 		subproblem := dp(coins, n-coin) // 子问题的解
 
 		if subproblem == -1 { // 子问题无解，忽略
@@ -41,7 +41,7 @@ func dp(coins []int, n int) int {
 
 func coinChange(coins []int, amount int) int {
 
-	return dp(coins, amount)
+	return dp(&coins, amount)
 }
 
 // dp 数组解
