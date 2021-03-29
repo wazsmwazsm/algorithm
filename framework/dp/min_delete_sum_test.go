@@ -5,7 +5,7 @@ import (
 )
 
 func TestMinimumDeleteSum(t *testing.T) {
-	if 231 != minimumDeleteSum("sea", "eat") { // remove s t
+	if 231 != minimumDeleteSum("eat", "sea") { // remove s t
 		t.Error("minimumDeleteSum err")
 	}
 
