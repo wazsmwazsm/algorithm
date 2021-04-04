@@ -22,3 +22,12 @@ func TestEditDistance2(t *testing.T) {
 		t.Error("edit distance err")
 	}
 }
+func TestEditDistance3(t *testing.T) {
+
+	if 3 != editDistance3("horse", "ros") {
+		t.Error("edit distance err")
+	}
+	if 5 != editDistance3("intention", "execution") {
+		t.Error("edit distance err")
+	}
+}

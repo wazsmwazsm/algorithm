@@ -127,7 +127,7 @@ func longestCommonSubsequence3(s1, s2 string) int {
 	// i 和 j 为 0 为 base case
 	for i := 0; i < lS1; i++ {
 		for j := 0; j < lS2; j++ {
-			if s1[i] == s2[j] {
+			if s1[i] == s2[j] { // 从小推出大
 				dpArr[i+1][j+1] = 1 + dpArr[i][j]
 			} else {
 				subRes1 := dpArr[i][j+1]

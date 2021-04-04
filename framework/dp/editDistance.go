@@ -129,3 +129,49 @@ func editDistance2(s1, s2 string) int {
 	}
 	return editDistanceDp2(&memo, s1, lS1-1, s2, lS2-1)
 }
+
+// DP 数组的解法
+func editDistance3(s1, s2 string) int {
+	lS1 := len(s1)
+	lS2 := len(s2)
+
+	dpArr := [][]int{}
+	for i := 0; i <= lS1; i++ { // 要存 base case 问题的解，所以要加一
+		arr := []int{}
+		for j := 0; j <= lS2; j++ {
+			arr = append(arr, 0)
+		}
+		dpArr = append(dpArr, arr)
+	}
+	// base case
+	for i := 1; i <= lS1; i++ {
+		dpArr[i][0] = i
+	}
+	for j := 1; j <= lS2; j++ {
+		dpArr[0][j] = j
+	}
+
+	for i := 1; i <= lS1; i++ {
+		for j := 1; j <= lS2; j++ {
+			if s1[i-1] == s2[j-1] { // 从小推出大
+				dpArr[i][j] = dpArr[i-1][j-1]
+			} else {
+				resInsert := dpArr[i][j-1] + 1
+				resDelete := dpArr[i-1][j] + 1
+				resReplace := dpArr[i-1][j-1] + 1
+
+				// 选取三个子问题的最小的
+				minRes := resInsert
+				if resDelete < minRes {
+					minRes = resDelete
+				}
+				if resReplace < minRes {
+					minRes = resReplace
+				}
+				dpArr[i][j] = minRes
+			}
+		}
+	}
+
+	return dpArr[lS1][lS2]
+}
