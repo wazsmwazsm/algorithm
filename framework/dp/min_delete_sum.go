@@ -70,3 +70,53 @@ func minimumDeleteSumDp(memo *[][]int, s1 string, i int, s2 string, j int) int {
 
 	return (*memo)[i][j]
 }
+
+// dp 数组解法
+func minimumDeleteSum2(s1, s2 string) int {
+
+	lS1 := len(s1)
+	lS2 := len(s2)
+
+	dpArr := [][]int{}
+	for i := 0; i <= lS1; i++ {
+		arr := []int{}
+		for j := 0; j <= lS2; j++ {
+			arr = append(arr, 0)
+		}
+		dpArr = append(dpArr, arr)
+	}
+
+	// base case 初始化
+	for i := 1; i <= lS1; i++ {
+		dpArr[i][0] += dpArr[i-1][0] + int(s1[i-1])
+	}
+	for j := 1; j <= lS2; j++ {
+		dpArr[0][j] += dpArr[0][j-1] + int(s2[j-1])
+	}
+
+	for i := 1; i <= lS1; i++ {
+		for j := 1; j <= lS2; j++ {
+			if s1[i-1] == s2[j-1] { // 从小推出大
+				dpArr[i][j] = dpArr[i-1][j-1]
+			} else {
+				subRes1 := dpArr[i][j-1] + int(s2[j-1])
+				subRes2 := dpArr[i-1][j] + int(s1[i-1])
+
+				if subRes1 > subRes2 { // 选小的
+					dpArr[i][j] = subRes2
+				} else {
+					dpArr[i][j] = subRes1
+				}
+			}
+		}
+	}
+
+	// for i := 0; i <= lS1; i++ {
+	// 	for j := 0; j <= lS2; j++ {
+	// 		fmt.Printf("%d ", dpArr[i][j])
+	// 	}
+	// 	fmt.Println()
+	// }
+
+	return dpArr[lS1][lS2]
+}

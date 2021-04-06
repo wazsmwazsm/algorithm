@@ -173,5 +173,12 @@ func editDistance3(s1, s2 string) int {
 		}
 	}
 
+	// for i := 0; i <= lS1; i++ {
+	// 	for j := 0; j <= lS2; j++ {
+	// 		fmt.Printf("%d ", dpArr[i][j])
+	// 	}
+	// 	fmt.Println()
+	// }
+
 	return dpArr[lS1][lS2]
 }
