@@ -1,5 +1,7 @@
 package dp
 
+import "fmt"
+
 /*
 	编辑距离
 
@@ -181,4 +183,126 @@ func editDistance3(s1, s2 string) int {
 	// }
 
 	return dpArr[lS1][lS2]
+}
+
+const (
+	opInsert  = 0
+	opDelete  = 1
+	opReplace = 2
+	opSkip    = 3
+)
+
+var opStr = map[int]string{
+	0: "insert",
+	1: "delete",
+	2: "replace",
+	3: "skip",
+}
+
+// 编辑路径节点，用来保存上一次操作节点
+type editNode struct {
+	char     byte
+	charOld  byte
+	op       int
+	distance int
+	prev     *editNode
+}
+
+// 求编辑路径
+func editDistancePath(s1, s2 string) []string {
+	lS1 := len(s1)
+	lS2 := len(s2)
+
+	s1b := []byte(s1)
+	s2b := []byte(s2)
+	res := []string{}
+
+	dpArr := [][]*editNode{}
+	for i := 0; i <= lS1; i++ { // 要存 base case 问题的解，所以要加一
+		arr := []*editNode{}
+		for j := 0; j <= lS2; j++ {
+			arr = append(arr, &editNode{})
+		}
+		dpArr = append(dpArr, arr)
+	}
+	// base case
+	for i := 1; i <= lS1; i++ {
+		dpArr[i][0].distance = i
+	}
+	for j := 1; j <= lS2; j++ {
+		dpArr[0][j].distance = j
+	}
+
+	for i := 1; i <= lS1; i++ {
+		for j := 1; j <= lS2; j++ {
+			currentNode := dpArr[i][j]
+
+			if s1b[i-1] == s2b[j-1] { // 从小推出大
+				prevNode := dpArr[i-1][j-1]
+				currentNode.distance = prevNode.distance
+				currentNode.prev = prevNode
+				prevNode.char = s1b[i-1]
+				prevNode.op = opSkip
+				fmt.Printf("%d %d %c %c\n", i-1, j-1, s1[i-1], s2[j-1])
+			} else {
+				insertNode := dpArr[i][j-1]
+				deleteNode := dpArr[i-1][j]
+				replaceNode := dpArr[i-1][j-1]
+
+				resInsert := insertNode.distance + 1
+				resDelete := deleteNode.distance + 1
+				resReplace := replaceNode.distance + 1
+
+				// 选取三个子问题的最小的
+				minRes := resInsert
+				op := opInsert
+				if resDelete < minRes {
+					minRes = resDelete
+					op = opDelete
+				}
+				if resReplace < minRes {
+					minRes = resReplace
+					op = opReplace
+				}
+
+				switch op {
+				case opInsert:
+					insertNode.op = op
+					insertNode.char = s2b[j-1]
+					currentNode.prev = insertNode
+				case opDelete:
+					deleteNode.op = op
+					deleteNode.char = s1b[i-1]
+					currentNode.prev = deleteNode
+				case opReplace:
+					replaceNode.op = op
+					replaceNode.char = s2b[j-1]
+					replaceNode.charOld = s1b[i-1]
+					currentNode.prev = replaceNode
+				}
+
+				currentNode.distance = minRes
+			}
+		}
+	}
+
+	lastNode := dpArr[lS1][lS2]
+	pN := lastNode.prev
+	for pN != nil {
+		detail := []string{fmt.Sprintf("%s char %c", opStr[pN.op], pN.char)}
+		if pN.charOld != 0 {
+			detail = []string{fmt.Sprintf("%s char %c to %c", opStr[pN.op], pN.charOld, pN.char)}
+		}
+		res = append(detail, res...)
+		pN = pN.prev
+	}
+
+	for i := 0; i <= lS1; i++ { // 要存 base case 问题的解，所以要加一
+		for j := 0; j <= lS2; j++ {
+			fmt.Printf("%d-", dpArr[i][j].distance)
+		}
+		fmt.Println()
+	}
+
+	return res
 }

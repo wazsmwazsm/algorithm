@@ -1,6 +1,7 @@
 package dp
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -29,5 +30,15 @@ func TestEditDistance3(t *testing.T) {
 	}
 	if 5 != editDistance3("intention", "execution") {
 		t.Error("edit distance err")
+	}
+}
+func TestEditDistancePath(t *testing.T) {
+	s1 := "horse"
+	s2 := "ros"
+	p := editDistancePath(s1, s2)
+
+	fmt.Printf("s1 %s to s2 %s\n", s1, s2)
+	for _, detail := range p {
+		fmt.Println(detail)
 	}
 }
