@@ -35,10 +35,33 @@ func TestEditDistance3(t *testing.T) {
 func TestEditDistancePath(t *testing.T) {
 	s1 := "horse"
 	s2 := "ros"
-	p := editDistancePath(s1, s2)
+	p, res := editDistancePath(s1, s2)
 
-	fmt.Printf("s1 %s to s2 %s\n", s1, s2)
+	fmt.Printf("\ns1 %s to s2 %s\n", s1, s2)
 	for _, detail := range p {
 		fmt.Println(detail)
 	}
+	fmt.Printf("min edit distance %d\n", res)
+}
+func TestEditDistancePath2(t *testing.T) {
+	s1 := "intention"
+	s2 := "execution"
+	p, res := editDistancePath(s1, s2)
+
+	fmt.Printf("\ns1 %s to s2 %s\n", s1, s2)
+	for _, detail := range p {
+		fmt.Println(detail)
+	}
+	fmt.Printf("min edit distance %d\n", res)
+}
+func TestEditDistancePath3(t *testing.T) {
+	s1 := "pion"
+	s2 := "pationte"
+	p, res := editDistancePath(s1, s2)
+
+	fmt.Printf("\ns1 %s to s2 %s\n", s1, s2)
+	for _, detail := range p {
+		fmt.Println(detail)
+	}
+	fmt.Printf("min edit distance %d\n", res)
 }

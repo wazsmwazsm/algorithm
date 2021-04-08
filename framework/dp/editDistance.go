@@ -202,19 +202,17 @@ var opStr = map[int]string{
 // 编辑路径节点，用来保存上一次操作节点
 type editNode struct {
 	char     byte
-	charOld  byte
+	charOld  byte // 保存替换前的字符
 	op       int
 	distance int
 	prev     *editNode
 }
 
 // 求编辑路径
-func editDistancePath(s1, s2 string) []string {
+func editDistancePath(s1, s2 string) ([]string, int) {
 	lS1 := len(s1)
 	lS2 := len(s2)
 
-	s1b := []byte(s1)
-	s2b := []byte(s2)
 	res := []string{}
 
 	dpArr := [][]*editNode{}
@@ -236,14 +234,32 @@ func editDistancePath(s1, s2 string) []string {
 	for i := 1; i <= lS1; i++ {
 		for j := 1; j <= lS2; j++ {
 			currentNode := dpArr[i][j]
+			if lS1 > lS2 && i > j { // s1 长，剩下的需要都删除
+				deleteNode := dpArr[i-1][j]
+				resDelete := deleteNode.distance + 1
+				deleteNode.op = opDelete
+				deleteNode.char = s1[i-1]
+				currentNode.prev = deleteNode
+				currentNode.distance = resDelete
+				continue
+			}
 
-			if s1b[i-1] == s2b[j-1] { // 从小推出大
+			if lS1 < lS2 && i < j { // s2 长，不够的需要插入
+				insertNode := dpArr[i][j-1]
+				resInsert := insertNode.distance + 1
+				insertNode.op = opInsert
+				insertNode.char = s2[j-1]
+				currentNode.prev = insertNode
+				currentNode.distance = resInsert
+				continue
+			}
+
+			if s1[i-1] == s2[j-1] { // 从小推出大
 				prevNode := dpArr[i-1][j-1]
 				currentNode.distance = prevNode.distance
 				currentNode.prev = prevNode
-				prevNode.char = s1b[i-1]
+				prevNode.char = s1[i-1]
 				prevNode.op = opSkip
-				fmt.Printf("%d %d %c %c\n", i-1, j-1, s1[i-1], s2[j-1])
 			} else {
 				insertNode := dpArr[i][j-1]
 				deleteNode := dpArr[i-1][j]
@@ -252,6 +268,10 @@ func editDistancePath(s1, s2 string) []string {
 				resInsert := insertNode.distance + 1
 				resDelete := deleteNode.distance + 1
 				resReplace := replaceNode.distance + 1
+
+				if s1[i-1] == 'r' && s2[j-1] == 's' {
+					fmt.Println(i, j, resInsert, resDelete, resReplace)
+				}
 
 				// 选取三个子问题的最小的
 				minRes := resInsert
@@ -268,16 +288,16 @@ func editDistancePath(s1, s2 string) []string {
 				switch op {
 				case opInsert:
 					insertNode.op = op
-					insertNode.char = s2b[j-1]
+					insertNode.char = s2[j-1]
 					currentNode.prev = insertNode
 				case opDelete:
 					deleteNode.op = op
-					deleteNode.char = s1b[i-1]
+					deleteNode.char = s1[i-1]
 					currentNode.prev = deleteNode
 				case opReplace:
 					replaceNode.op = op
-					replaceNode.char = s2b[j-1]
-					replaceNode.charOld = s1b[i-1]
+					replaceNode.char = s2[j-1]
+					replaceNode.charOld = s1[i-1]
 					currentNode.prev = replaceNode
 				}
 
@@ -297,12 +317,12 @@ func editDistancePath(s1, s2 string) []string {
 		pN = pN.prev
 	}
 
-	for i := 0; i <= lS1; i++ { // 要存 base case 问题的解，所以要加一
+	for i := 0; i <= lS1; i++ {
 		for j := 0; j <= lS2; j++ {
 			fmt.Printf("%d-", dpArr[i][j].distance)
 		}
 		fmt.Println()
 	}
 
-	return res
+	return res, dpArr[lS1][lS2].distance
 }
