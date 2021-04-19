@@ -31,6 +31,9 @@ func TestEditDistance3(t *testing.T) {
 	if 5 != editDistance3("intention", "execution") {
 		t.Error("edit distance err")
 	}
+	if 4 != editDistance3("pion", "pationte") {
+		t.Error("edit distance err")
+	}
 }
 func TestEditDistancePath(t *testing.T) {
 	s1 := "horse"

@@ -45,6 +45,13 @@ import "fmt"
 		s1 已经走完，s2 剩下的都插入
 */
 
+/*
+
+	注意： 网上的版本普遍是逐个遍历比较，但是这样无法做出最小编辑操作的最优选项，必须要加条件，判断下一个字符和当前是否相等，进行相应的插、删才可以
+	逐个遍历的方式只是不够了插、多出去删，显然有些场景是不满足的（从求编辑路线就能看出来，虽然数值求得对，但是路径是错误的）
+
+*/
+
 func editDistanceDp(s1 string, i int, s2 string, j int) int {
 	// base case
 	if i == -1 {
@@ -69,6 +76,14 @@ func editDistanceDp(s1 string, i int, s2 string, j int) int {
 		}
 		if resReplace < minRes {
 			minRes = resReplace
+		}
+
+		if j+1 < len(s2) && s1[i] == s2[j+1] { // s1 当前字符和 s2 下一个字符（如果有）相同，操作最短则要插
+			minRes = resInsert
+		}
+
+		if i+1 < len(s1) && s1[i+1] == s2[j] { // s1 下一个字符（如果有）和 s2 当前字符相同，操作最短则要删
+			minRes = resDelete
 		}
 
 		return minRes
@@ -109,6 +124,14 @@ func editDistanceDp2(memo *[][]int, s1 string, i int, s2 string, j int) int {
 		}
 		if resReplace < minRes {
 			minRes = resReplace
+		}
+
+		if j+1 < len(s2) && s1[i] == s2[j+1] { // s1 当前字符和 s2 下一个字符（如果有）相同，操作最短则要插
+			minRes = resInsert
+		}
+
+		if i+1 < len(s1) && s1[i+1] == s2[j] { // s1 下一个字符（如果有）和 s2 当前字符相同，操作最短则要删
+			minRes = resDelete
 		}
 
 		(*memo)[i][j] = minRes
@@ -170,6 +193,15 @@ func editDistance3(s1, s2 string) int {
 				if resReplace < minRes {
 					minRes = resReplace
 				}
+
+				if j < lS2 && s1[i-1] == s2[j] { // s1 当前字符和 s2 下一个字符（如果有）相同，操作最短则要插
+					minRes = resInsert
+				}
+
+				if i < lS1 && s1[i] == s2[j-1] { // s1 下一个字符（如果有）和 s2 当前字符相同，操作最短则要删
+					minRes = resDelete
+				}
+
 				dpArr[i][j] = minRes
 			}
 		}
@@ -234,32 +266,15 @@ func editDistancePath(s1, s2 string) ([]string, int) {
 	for i := 1; i <= lS1; i++ {
 		for j := 1; j <= lS2; j++ {
 			currentNode := dpArr[i][j]
-			if lS1 > lS2 && i > j { // s1 长，剩下的需要都删除
-				deleteNode := dpArr[i-1][j]
-				resDelete := deleteNode.distance + 1
-				deleteNode.op = opDelete
-				deleteNode.char = s1[i-1]
-				currentNode.prev = deleteNode
-				currentNode.distance = resDelete
-				continue
-			}
-
-			if lS1 < lS2 && i < j { // s2 长，不够的需要插入
-				insertNode := dpArr[i][j-1]
-				resInsert := insertNode.distance + 1
-				insertNode.op = opInsert
-				insertNode.char = s2[j-1]
-				currentNode.prev = insertNode
-				currentNode.distance = resInsert
-				continue
-			}
 
 			if s1[i-1] == s2[j-1] { // 从小推出大
+
 				prevNode := dpArr[i-1][j-1]
 				currentNode.distance = prevNode.distance
 				currentNode.prev = prevNode
 				prevNode.char = s1[i-1]
 				prevNode.op = opSkip
+
 			} else {
 				insertNode := dpArr[i][j-1]
 				deleteNode := dpArr[i-1][j]
@@ -268,10 +283,6 @@ func editDistancePath(s1, s2 string) ([]string, int) {
 				resInsert := insertNode.distance + 1
 				resDelete := deleteNode.distance + 1
 				resReplace := replaceNode.distance + 1
-
-				if s1[i-1] == 'r' && s2[j-1] == 's' {
-					fmt.Println(i, j, resInsert, resDelete, resReplace)
-				}
 
 				// 选取三个子问题的最小的
 				minRes := resInsert
@@ -283,6 +294,16 @@ func editDistancePath(s1, s2 string) ([]string, int) {
 				if resReplace < minRes {
 					minRes = resReplace
 					op = opReplace
+				}
+
+				if j < lS2 && s1[i-1] == s2[j] { // s1 当前字符和 s2 下一个字符（如果有）相同，操作最短则要插
+					minRes = resInsert
+					op = opInsert
+				}
+
+				if i < lS1 && s1[i] == s2[j-1] { // s1 下一个字符（如果有）和 s2 当前字符相同，操作最短则要删
+					minRes = resDelete
+					op = opDelete
 				}
 
 				switch op {
@@ -317,12 +338,12 @@ func editDistancePath(s1, s2 string) ([]string, int) {
 		pN = pN.prev
 	}
 
-	for i := 0; i <= lS1; i++ {
-		for j := 0; j <= lS2; j++ {
-			fmt.Printf("%d-", dpArr[i][j].distance)
-		}
-		fmt.Println()
-	}
+	// for i := 0; i <= lS1; i++ {
+	// 	for j := 0; j <= lS2; j++ {
+	// 		fmt.Printf("%d-", dpArr[i][j].distance)
+	// 	}
+	// 	fmt.Println()
+	// }
 
 	return res, dpArr[lS1][lS2].distance
 }
