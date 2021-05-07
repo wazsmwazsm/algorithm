@@ -40,6 +40,7 @@ func (e Envelopes) Swap(i, j int) {
 	e[i], e[j] = e[j], e[i]
 }
 
+// 时间 O(n^2) 空间 O(n)
 func maxEnvelopes(e Envelopes) int {
 	sort.Sort(e)
 
@@ -53,4 +54,28 @@ func maxEnvelopes(e Envelopes) int {
 
 	// 对高采用 lis 求最长递增子序列
 	return longestIncreasingSubsequence2(heights)
+}
+
+// 不把 h 拿出来直接求的方式 时间 O(n^2) 空间 O(n)
+func maxEnvelopes2(e Envelopes) int {
+	sort.Sort(e)
+	// 对高采用 lis 求最长递增子序列
+	le := len(e)
+	dp := make([]int, le) // dp[i] 表示长度为 i 的最长递增子序列（LIS）末尾的数
+	dp[1] = e[0][1]       // base case dp 下标代表子序长度，从 1 开始
+	index := 1            // dp 下标代表子序长度，从 1 开始
+
+	for i := 1; i < le; i++ {
+		if e[i][1] > dp[index] { // 当前数值比 i-1 长度的子序 (当前最大递增子序列长度) 最大值大，子序长度增加
+			index++
+			dp[index] = e[i][1]
+		} else {
+			// 刷新前面第一个比 e[i][1] 大的值，这步一是为了遍历 dp 时不要误判（因为前面有个大值影响后面的子序列判断）
+			// 二是让 dp 数组有序，可以继续二分查找将流程走下去
+			prevIndex := findFirstGtNum(dp, index, e[i][1])
+			dp[prevIndex] = e[i][1]
+		}
+	}
+	// fmt.Println(dp)
+	return index
 }

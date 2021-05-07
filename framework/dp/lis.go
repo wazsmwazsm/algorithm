@@ -92,14 +92,14 @@ func findFirstGtNum(dp []int, len int, n int) int {
 
 	for left < right {
 		mid := (left + right) / 2
-		if dp[mid] > n {
+		if dp[mid] > n { // 中值大于 n，右边界要缩减
 			right = mid
 		} else {
 			left = mid + 1
 		}
 	}
 
-	return right
+	return right // 满足 dp[mid] > n 最小的那个值的下标
 }
 
 func longestIncreasingSubsequence2(a []int) int {
