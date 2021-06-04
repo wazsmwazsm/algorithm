@@ -103,14 +103,22 @@ func canPartition2(nums []int) bool {
 	dp[0] = true
 
 	for i := 1; i <= n; i++ {
-		// for j := 1; j <= sum; j++ { // 正向遍历会用到之前的结果影响数据正确性，这里反向遍历
+		// for j := 1; j <= sum; j++ {
+		//  注意：正向遍历会用到之前的结果影响数据正确性，这里反向遍历
+		// 压缩后，没有 i-1 的维度保存上一次的值，此提状态转移方程 dp[j] = dp[j] || dp[j-nums[i-1]] 中
+		// dp[j] 是通过上一次的 dp[j] 和 dp[j-nums[i-1]] 求得，正向遍历的一个问题就是
+		// dp[j] 比如 j 为 2 时 dp[2] 算过了，然后 j 往后遍历，算 dp[j-nums[i-1]] 时 dp[j-nums[i-1]] 刚好就是 dp[2]
+		// 这个场景显然不行，因为在内层循环里先破坏了 dp[j-nums[i-1]] 的求解 dp[j-nums[i-1]] 取的不是 i-1 的那个结果而是
+		// i 层循环求 dp[j] 计算环覆盖了的结果
 		for j := sum; j >= 0; j-- {
 			if j-nums[i-1] >= 0 {
+				// fmt.Printf("%d,%d - ", j, j-nums[i-1])
 				dp[j] = dp[j] || dp[j-nums[i-1]]
 			}
-
 		}
+		// fmt.Println()
 	}
+	// fmt.Println()
 
 	return dp[sum]
 }
