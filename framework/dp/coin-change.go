@@ -2,6 +2,8 @@ package dp
 
 const intMax = int(^uint(0) >> 1)
 
+// 求最多时也可以转化为背包问题，参考 coin_change_knaosack.go
+
 // 经典的凑零钱问题，给你 k 种面值的硬币，面值分别为 c1, c2 ... ck，每种硬币的数量无限，
 // 再给一个总金额 amount，问你最少需要几枚硬币凑出这个金额，如果不可能凑出，算法返回 -1
 // 如果是寻找有多少种可能，是组合问题，可以参考回溯
@@ -61,7 +63,7 @@ func dpMemo(memo *map[int]int, coins []int, n int) int {
 		return -1
 	}
 
-	if v, ok :=(*memo)[n]; ok {
+	if v, ok := (*memo)[n]; ok {
 		return v
 	}
 
@@ -86,6 +88,7 @@ func dpMemo(memo *map[int]int, coins []int, n int) int {
 
 	return (*memo)[n]
 }
+
 // 使用备忘录
 func coinChange2(coins []int, amount int) int {
 
