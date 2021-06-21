@@ -45,6 +45,7 @@ func change(amount int, coins []int) int {
 			if j-coins[i-1] < 0 {
 				dp[i][j] = dp[i-1][j] // 装不下，此时装的方法数和之前一样
 			} else {
+				// 这里和之前不同的是，物品无限，那么可以重复选自己，所以要的是 dp[i][j-coins[i-1]]
 				dp[i][j] = dp[i-1][j] + dp[i][j-coins[i-1]] // 因为是多少种方法，所以装和不装的要加起来
 			}
 		}
@@ -69,7 +70,7 @@ func change2(amount int, coins []int) int {
 	for i := 1; i <= n; i++ {
 		for j := 1; j <= amount; j++ {
 			// 这里为什么和之前的背包问题不一样要正向遍历？因为这个问题每个硬币可以重新选择自己，数额无限
-			// 同一个 i 计算的所有结果都算在内，都要求和
+			// 同一个 i 计算的所有结果都算在内，都要求和，需要求的是 dp[i][j-coins[i-1]] 而不是 dp[i-1][j-coins[i-1]]
 			if j-coins[i-1] >= 0 {
 				dp[j] = dp[j] + dp[j-coins[i-1]]
 			}
