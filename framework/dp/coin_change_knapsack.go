@@ -79,3 +79,11 @@ func change2(amount int, coins []int) int {
 
 	return dp[amount]
 }
+
+/*
+
+思考：为什么不定义 dp[j] 为金额为 j 时的组合总数呢？
+	因为这样 dp[j] 无法退出 dp[j+1]，无法构成状态转移方程
+
+	金额多一个，可能的组合会多很多，不只是要考虑多出去的那个金额，需要整体去计算
+*/
