@@ -24,6 +24,12 @@ import "sort"
 
 	由于我们事先排了序，不难发现所有与 x 相交的区间必然会与 x 的end相交；
 	如果一个区间不想与 x 的end相交，它的start必须要大于（或等于）x 的end
+
+
+	同样的题目有射气球，水平方向上的几个气球，可以重叠，求射穿所有气球需要几个飞镖（擦边也破）
+	其实就是再求最多几个不相交区间，只不过擦边也破，intv[0] >= xEnd 需要变为 intv[0] > xEnd
+
+	还有求移除区间的最小数量使剩下的区间互不重叠，其实就是总区间减去最多不重合区间
 */
 
 type Intvs [][]int
@@ -38,6 +44,7 @@ func (itv Intvs) Swap(i, j int) {
 	itv[i], itv[j] = itv[j], itv[i]
 }
 
+// 排序（快排 nlog(n)，对比 n，整体 nlog(n)）
 func intervalScheduling(intvs [][]int) int {
 	intvsNew := Intvs(intvs)
 

@@ -26,11 +26,11 @@ func canJump(nums []int) bool {
 	n := len(nums)
 	farthest := 0
 
-	for i := 0; i < n-1; i++ {
+	for i := 0; i < n-1; i++ { // 如果已经到了最后一格就不用跳了
 		if farthest < nums[i]+i {
 			farthest = nums[i] + i
 		}
-		if farthest <= i {
+		if farthest <= i { // 当前位置已经无法再跳远
 			return false
 		}
 	}
