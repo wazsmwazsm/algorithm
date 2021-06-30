@@ -19,7 +19,10 @@ package greedy
 
 	思路：换成求最值问题
 	请问通过题目中的跳跃规则，最多能跳多远？最远大于等于数组长度则为 true
-	贪心思路，每步都往最远跳
+	贪心思路，计算每个位置能达到的最远步数，到最后只要有能满足大于等于数组长度的，就 ok（此思路并不能使到达末尾最少的次数）
+
+	贪心的点在 nums[i]
+
 */
 
 func canJump(nums []int) bool {
@@ -27,7 +30,7 @@ func canJump(nums []int) bool {
 	farthest := 0
 
 	for i := 0; i < n-1; i++ { // 如果已经到了最后一格就不用跳了
-		if farthest < nums[i]+i {
+		if farthest < nums[i]+i { // 计算每个位置的最远步数，能跳更远就更新
 			farthest = nums[i] + i
 		}
 		if farthest <= i { // 当前位置已经无法再跳远
