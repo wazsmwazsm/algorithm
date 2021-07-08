@@ -46,3 +46,21 @@ func TestIsMath3(t *testing.T) {
 		t.Error("is match err")
 	}
 }
+func TestIsMath4(t *testing.T) {
+
+	if !isMath4("abb", "c*a*b*") {
+		t.Error("is match err")
+	}
+
+	if !isMath4("abc", ".*") {
+		t.Error("is match err")
+	}
+
+	if !isMath4("a88kksjshh", "a.*") {
+		t.Error("is match err")
+	}
+
+	if isMath4("ccc", "a.*") {
+		t.Error("is match err")
+	}
+}
