@@ -64,3 +64,22 @@ func TestIsMath4(t *testing.T) {
 		t.Error("is match err")
 	}
 }
+
+func TestIsMath5(t *testing.T) {
+
+	if !isMath5("abb", "c*a*b*") {
+		t.Error("is match err")
+	}
+
+	if !isMath5("abc", ".*") {
+		t.Error("is match err")
+	}
+
+	if !isMath5("a88kksjshh", "a.*") {
+		t.Error("is match err")
+	}
+
+	if isMath5("ccc", "a.*") {
+		t.Error("is match err")
+	}
+}

@@ -72,8 +72,33 @@ func isMath3(text, pattern string) bool {
 	return firstMatch && isMath3(text[1:], pattern[1:])
 }
 
-// DP 数组的方式
+// 使用备忘录剪枝
+func isMathDP(memo *map[string]bool, text, pattern string) bool {
+	if v, ok := (*memo)[text+":"+pattern]; ok { // 如果已经计算过，返回
+		return v
+	}
+	if pattern == "" {
+		return text == "" // text 不空，pattern 空，未匹配
+	}
+
+	firstMatch := text != "" && (pattern[0] == text[0] || pattern[0] == '.')
+	if len(pattern) >= 2 && pattern[1] == '*' {
+		(*memo)[text+":"+pattern] = isMathDP(memo, text, pattern[2:]) || firstMatch && isMathDP(memo, text[1:], pattern)
+		return (*memo)[text+":"+pattern]
+	}
+
+	(*memo)[text+":"+pattern] = firstMatch && isMathDP(memo, text[1:], pattern[1:])
+	return (*memo)[text+":"+pattern]
+}
+
 func isMath4(text, pattern string) bool {
+	memo := make(map[string]bool)
+
+	return isMathDP(&memo, text, pattern)
+}
+
+// DP 数组的方式
+func isMath5(text, pattern string) bool {
 	lText := len(text)
 	lPattern := len(pattern)
 
