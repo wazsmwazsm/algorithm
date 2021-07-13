@@ -71,3 +71,38 @@ func isMath3(text, pattern string) bool {
 
 	return firstMatch && isMath3(text[1:], pattern[1:])
 }
+
+// DP 数组的方式
+func isMath4(text, pattern string) bool {
+	lText := len(text)
+	lPattern := len(pattern)
+
+	var dp [][]bool = [][]bool{}
+
+	for i := 0; i < lText+1; i++ {
+		dp = append(dp, make([]bool, lPattern+1))
+	}
+
+	// base case 当 text 为空，pattern 为 * 时肯定匹配
+	dp[0][0] = true
+	for i := 0; i < lPattern; i++ {
+		if pattern[i] == '*' {
+			dp[0][i+1] = dp[0][i]
+		}
+	}
+
+	for i := 1; i <= lText; i++ {
+		for j := 1; j <= lPattern; j++ {
+
+			if text[i-1] == pattern[j-1] || pattern[j-1] == '.' {
+				dp[i][j] = dp[i-1][j-1]
+			} else if pattern[j-1] == '*' {
+				// 发现 *，两个选择，要么匹配不到（0 次，此时要跳过 *，即 dp[i-1][j]）
+				// 可以继续匹配，ok，text 前移，text[i] 继续和 * 匹配
+				dp[i][j] = dp[i-1][j] || dp[i][j-1]
+			}
+		}
+	}
+
+	return dp[lText][lPattern]
+}
