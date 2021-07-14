@@ -71,6 +71,22 @@ func TestIsMath5(t *testing.T) {
 		t.Error("is match err")
 	}
 
+	if !isMath5("abb", ".a*b*") {
+		t.Error("is match err")
+	}
+
+	if !isMath5("hello", "h.*o") {
+		t.Error("is match err")
+	}
+
+	if !isMath5("hello", "a*llo") {
+		t.Error("is match err")
+	}
+
+	if !isMath5("hello", "a*") {
+		t.Error("is match err")
+	}
+
 	if !isMath5("abc", ".*") {
 		t.Error("is match err")
 	}
@@ -80,6 +96,14 @@ func TestIsMath5(t *testing.T) {
 	}
 
 	if isMath5("ccc", "a.*") {
+		t.Error("is match err")
+	}
+
+	// 错误格式
+	if isMath5("hello", "*b*") {
+		t.Error("is match err")
+	}
+	if isMath5("hello", "a**") {
 		t.Error("is match err")
 	}
 }
