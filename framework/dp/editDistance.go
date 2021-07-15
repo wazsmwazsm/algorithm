@@ -168,6 +168,7 @@ func editDistance3(s1, s2 string) int {
 		}
 		dpArr = append(dpArr, arr)
 	}
+	// 二维数组，从左到右从上到下遍历，base case 需要计算 dpArr[i][0] 和 dpArr[0][j]
 	// base case
 	for i := 1; i <= lS1; i++ {
 		dpArr[i][0] = i

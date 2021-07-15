@@ -124,18 +124,21 @@ func isMath5(text, pattern string) bool {
 	}
 
 	// base case 此方法的难度其实就是把 base case 做出来
+	// dp[i][0] 都是 false，不用求（pattern 为空时除了 text 也为空不然都无法匹配），求 dp[0][j] 即可
 	dp[0][0] = true                  // text 和 pattern 都是空，那肯定匹配
 	for j := 1; j <= lPattern; j++ { // 因为 dp[0][0] 已经确定，那么从 1 开始
 		match := true            // 先假设匹配
 		for k := 0; k < j; k++ { // 用 pattern[:j] 这个模式字符串和 "" 匹配
-			if pattern[k+1] == '*' { // 下一个字符是 *，那么调到 * 后面，这个肯定可以匹配
+			if k+1 < lPattern && pattern[k+1] == '*' { // 下一个字符是 *，那么调到 * 后面，这个肯定可以匹配
 				k++ // 跳两格
-			} else if pattern[k] == '.' { // 当前字符为 . 往下走一格
 				continue
-			} else { // 当前字符不为 . 且下个字符不为 * 那么当前字符肯定是一个特定匹配的字符, 显然和 "" 这个空串无法匹配
-				match = false
-				break
 			}
+			if pattern[k] == '.' { // 当前字符为 . 往下走一格
+				continue
+			}
+			// 当前字符不为 . 且下个字符不为 * 那么当前字符肯定是一个特定匹配的字符, 显然和 "" 这个空串无法匹配
+			match = false
+			break
 		}
 
 		dp[0][j] = match
