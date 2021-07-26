@@ -86,7 +86,10 @@ func search(s, pattern string) int {
 
 	kmp 的状态转移：
 	初始态：刚开始匹配，第一个字符
+	中间态：匹配到某个字符时的状态
 	结束态：匹配完成
+	转移：前进、回退
+
 	要确定状态转移的行为，得明确两个变量，一个是当前的匹配状态，另一个是遇到的字符
 	字符和 pattern 匹配时，下一个状态就前进，不匹配时回退（回退的原则就是尽可能少回退）
 
@@ -102,6 +105,8 @@ func search(s, pattern string) int {
 	当前状态dp[4]['c'] 时，因为 c 时匹配的，dp[4]['c'] 自然是 5 也就是到达终点了，当然此时的影子状态也可以算下 dp[2]['c'] = 0
 	说明影子回退到了初始态，当然如果 pattern 更长为 ababcddss 这样的也适用。以跟随的思路理解其实很好理解，影子走到 ab 了，当前态匹配 c
 	，显然 ab 后面只有 a 才能前进，跟不上了(ab 无法变成 abc，当前态和影子态已经无法拥有相等的匹配前缀)，只能退回起点继续计算。
+	影子状态其实就是用来复刻当前状态走过的路，以当前例子举例的话，当前态 dp[2]['a'] 时，影子状态和当前态有相同字符了，可以开始复刻了，
+	当前态 dp[3]['b'] 时, 发现影子状态能继续复刻下去（都是 b），影子就跟着走，从而以这种方式记录可回退的最长匹配前缀方便回退
 
 	kmp 的 dp 数组构造是 kmp 算法的核心，它描述了 kmp 的状态转移图（遇到不同字符时应该转移到哪个状态）
 
@@ -118,7 +123,53 @@ func search(s, pattern string) int {
 	dp[1]['B'] = 2 表示：
 	当前是状态 1，如果遇到字符 B，
 	pat 应该转移到状态 2
-
-
-
 */
+
+type KMP struct {
+	dp      [][]int
+	pattern string
+}
+
+// kmp search 的逻辑
+// 搜索很简单，就是通过构造好的 dp 状态图来决定状态怎么转移，到终止态则算匹配完成
+func (k *KMP) Search(s string) int {
+	m := len(k.pattern)
+	n := len(s)
+
+	j := 0 // pattern 初始态
+	for i := 0; i < n; i++ {
+		j = k.dp[i][s[i]] // 当前状态 j 遇到 s[i] 字符转移到下一个状态
+		if j == m {       // 到达终止态，返回索引
+			return i - m + 1
+		}
+	}
+
+	return -1 // 没匹配上
+}
+
+// 状态构造，描述 pattern 的状态转移图
+func NewKMP(pattern string) *KMP {
+	m := len(pattern)
+	kmpDP := [][]int{}
+	for i := 0; i < m; i++ {
+		kmpDP = append(kmpDP, make([]int, 256)) // ascii 256
+	}
+	kmpDP[0][pattern[0]] = 1 // 初始态
+	x := 0                   // 影子态
+	for j := 1; j < m; j++ { // 遍历状态 (初始态已确定，从 1 开始)
+		for c := 0; c < 256; c++ { // 遍历 ascii 字符
+			if pattern[j] == byte(c) { // 找到 pattern 当前状态匹配的字符，前进
+				kmpDP[j][c] = j + 1
+			} else { // 其它字符不匹配，需要回退到影子状态
+				kmpDP[j][c] = kmpDP[x][c]
+			}
+		}
+		// 更新影子状态, 如果影子状态使用当前状态字符 pattern[j] 中可以让影子前进（前缀边长），则影子更新
+		x = kmpDP[x][pattern[j]]
+	}
+
+	return &KMP{
+		pattern: pattern,
+		dp:      kmpDP,
+	}
+}

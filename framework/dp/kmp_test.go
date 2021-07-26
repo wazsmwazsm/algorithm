@@ -14,3 +14,16 @@ func TestSearch(t *testing.T) {
 		t.Error("Search err")
 	}
 }
+func TestSearchKMP(t *testing.T) {
+
+	kmp := NewKMP("aaac")
+
+	if 4 != kmp.Search("aaabaaac") {
+		t.Error("Search err")
+	}
+
+	kmp = NewKMP("ll")
+	if 2 != kmp.Search("hello") {
+		t.Error("Search err")
+	}
+}
