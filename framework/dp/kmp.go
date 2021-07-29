@@ -136,9 +136,9 @@ func (k *KMP) Search(s string) int {
 	m := len(k.pattern)
 	n := len(s)
 
-	j := 0 // pattern 初始态
-	for i := 0; i < n; i++ {
-		j = k.dp[i][s[i]] // 当前状态 j 遇到 s[i] 字符转移到下一个状态
+	j := 0                   // pattern 初始态
+	for i := 0; i < n; i++ { // 遍历字符串字符
+		j = k.dp[j][s[i]] // 当前状态 j 遇到 s[i] 字符转移到下一个状态
 		if j == m {       // 到达终止态，返回索引
 			return i - m + 1
 		}
