@@ -1,6 +1,45 @@
 package dp
 
-// 斐波那契的 dp 解法
+// 暴力递归模型
+func fibonacciRecursion(n int) int {
+	if n == 0 {
+		return 0
+	}
+
+	if n == 1 {
+		return 1
+	}
+
+	return fibonacciRecursion(n-1) + fibonacciRecursion(n-2)
+}
+
+// 优化递归模型
+func fibonacciRecursionWithMemDp(mem *map[int]int, n int) int {
+	if n == 0 {
+		return 0
+	}
+
+	if n == 1 {
+		return 1
+	}
+
+	if res, ok := (*mem)[n]; ok {
+		return res
+	}
+
+	res := fibonacciRecursionWithMemDp(mem, n-1) + fibonacciRecursionWithMemDp(mem, n-2)
+	(*mem)[n] = res
+	return res
+}
+
+func fibonacciRecursionWithMem(n int) int {
+
+	mem := make(map[int]int, n)
+
+	return fibonacciRecursionWithMemDp(&mem, n)
+}
+
+// 斐波那契的 dp 解法 从小到大思维
 /*
 
 	状态转移方程
