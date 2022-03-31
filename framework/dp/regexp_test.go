@@ -79,6 +79,10 @@ func TestIsMath5(t *testing.T) {
 		t.Error("is match err")
 	}
 
+	if isMath5("hello", "hs*o") {
+		t.Error("is match err")
+	}
+
 	if !isMath5("hello", "a*llo") {
 		t.Error("is match err")
 	}

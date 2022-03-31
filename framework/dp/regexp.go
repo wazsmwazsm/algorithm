@@ -146,7 +146,7 @@ func isMath5(text, pattern string) bool {
 
 	for i := 1; i <= lText; i++ {
 		for j := 1; j <= lPattern; j++ {
-
+			// 注意，text和pattern的 i-1 j-1 就是当前字符(0算起)，dp 数组因为有 "" 的情况，i j 才是当前字符不要搞混了
 			if text[i-1] == pattern[j-1] || pattern[j-1] == '.' {
 				dp[i][j] = dp[i-1][j-1]
 			} else if pattern[j-1] == '*' {
